@@ -6,8 +6,19 @@
 </head>
 <body>
 
+
+
+    
 <script>
     // Funções para quebrar linha e escrever na tela.
+    // Distância percorrida ao usuário.
+    // Consumo médio do veículo.
+    // Consumo necessário em litros para a ida.
+    // Consumo necessário na tela.
+    // Quantidade de postos pesquisados.
+    // SOLUÇÃO PARA O NaN:
+    // Média dos valores pesquisados.
+
     function quebraLinha() {
         document.write("<br>");
     }
@@ -16,51 +27,39 @@
         document.write(texto);
         quebraLinha();
     }
-
-    // 1. Solicita a distância percorrida ao usuário.
+    
     var distancia_Percorrida = parseFloat(prompt("Qual a distância percorrida da sua casa até seu trabalho (em km)?"));
-
-    // 2. Solicita o consumo médio do veículo.
+    
     var consumo_Medio = parseFloat(prompt("Qual o consumo médio do seu veículo (em km/L)?"));
 
-    // 3. Calcula o consumo necessário em litros para a ida.
     var consumo_Necessario_Litros = distancia_Percorrida / consumo_Medio;
 
-    // 4. Apresenta o consumo necessário na tela.
     mostra("O consumo necessário é " + consumo_Necessario_Litros.toFixed(2) + " litros");
 
-    // 5. Solicita a quantidade de postos de combustíveis pesquisados.
     var quantidade_Postos_Pesquisados = parseInt(prompt("Em quantos postos você pesquisou?"));
 
-    // Inicialização das variáveis.
     var soma_total_Valores_Pesquisados = 0;
     var menor_Valor_Pesquisado = Infinity;
-    var contador_Postos_Validos = 0; // Nova variável para contar apenas as entradas numéricas válidas.
+    var contador_Postos_Validos = 0; 
     
-    // 6. Estrutura de repetição para solicitar os valores dos combustíveis.
     for (var i = 1; i <= quantidade_Postos_Pesquisados; i++) {
         var valor_Digitado = prompt("Digite o valor encontrado (em R$) no posto " + i + ":");
-        // Substitui vírgula por ponto para garantir que o parseFloat funcione corretamente.
+        
         var valor_Pesquisado = parseFloat(valor_Digitado.replace(",", ".")); 
 
-        // DESAFIO - PARTE 2 e SOLUÇÃO PARA O NaN:
-        // Verifica se o valor convertido é um número válido usando isNaN().
         if (isNaN(valor_Pesquisado)) {
             alert("Atenção: O valor '" + valor_Digitado + "' não é um número e será ignorado nos cálculos.");
         } else {
-            // Se for um número válido, executa os cálculos.
             soma_total_Valores_Pesquisados = soma_total_Valores_Pesquisados + valor_Pesquisado;
-            contador_Postos_Validos++; // Incrementa o contador de postos válidos.
+            contador_Postos_Validos++;
 
-            // 7. Estrutura condicional para verificar o menor valor.
+           
             if (valor_Pesquisado < menor_Valor_Pesquisado) {
                 menor_Valor_Pesquisado = valor_Pesquisado;
             }
         }
     }
-
-    // 8. Calcula a média dos valores pesquisados.
-    // Verifica se houve pelo menos um posto válido para evitar divisão por zero.
+    
     if (contador_Postos_Validos > 0) {
         var media = soma_total_Valores_Pesquisados / contador_Postos_Validos;
         mostra("A média dos valores pesquisados é R$ " + media.toFixed(2));
@@ -68,12 +67,10 @@
         mostra("Não foi possível calcular a média, pois nenhum valor válido foi digitado.");
     }
     
-    // Verifica se um menor valor foi encontrado.
     if (menor_Valor_Pesquisado === Infinity) {
         mostra("Não foi encontrado um menor valor, pois nenhum preço válido foi inserido.");
         mostra("Não é possível calcular o gasto diário.");
     } else {
-        // 9. Calcula o gasto diário com base no menor valor.
         var gasto_Diario = 2 * (consumo_Necessario_Litros * menor_Valor_Pesquisado);
         mostra("O menor valor pesquisado é R$ " + menor_Valor_Pesquisado.toFixed(2));
         mostra("O gasto diário (ida e volta) é R$ " + gasto_Diario.toFixed(2));
