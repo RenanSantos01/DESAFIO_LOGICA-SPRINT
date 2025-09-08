@@ -1,12 +1,89 @@
+
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <title>Desafio de Lógica - Cálculo de Combustível</title>
 </head>
+
+
+<style>
+    /* CSS completo para a estilização */
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        background-color: #f0f2f5;
+        color: #333;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        margin: 0;
+        padding: 20px;
+        box-sizing: border-box;
+    }
+    .container {
+        background-color: #ffffff;
+        padding: 40px;
+        border-radius: 12px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 600px;
+        text-align: center;
+    }
+    h1 {
+        color: #1a73e8;
+        margin-bottom: 30px;
+        font-size: 2em;
+    }
+    #area-resultados {
+        text-align: left;
+        margin-top: 20px;
+        border-top: 1px solid #e0e0e0;
+        padding-top: 20px;
+    }
+    .resultado-linha {
+        background-color: #f9f9f9;
+        padding: 15px;
+        margin-bottom: 10px;
+        border-radius: 8px;
+        border-left: 5px solid #1a73e8;
+        font-size: 1.1em;
+        display: flex;
+        justify-content: space-between;
+    }
+    .resultado-linha strong { color: #333; }
+    .resultado-linha span { font-weight: bold; color: #1a73e8; }
+    #btn-iniciar {
+        background-color: #1a73e8;
+        color: white;
+        border: none;
+        padding: 15px 30px;
+        font-size: 1.2em;
+        font-weight: bold;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+    #btn-iniciar:hover {
+        background-color: #1558b3;
+        transform: translateY(-2px);
+    }
+    .aviso { color: #d93025; font-weight: bold; }
+</style>
+</head>
 <body>
 
-    
+<div class="container">
+    <h1>Calculadora de Gastos com Combustível</h1>
+    <button id="btn-iniciar">Iniciar Cálculo</button>
+    <div id="area-resultados"></div>
+</div>
+
+
+
+                     <!--Inicio da lógica-->
+
 <script>
     // Funções para quebrar linha e escrever na tela.
     // Distância percorrida ao usuário.
@@ -17,14 +94,30 @@
     // SOLUÇÃO PARA O NaN:
     // Média dos valores pesquisados.
 
-    function quebraLinha() {
-        document.write("<br>");
-    }
+  
+  const btnIniciar = document.getElementById('btn-iniciar');
+    const areaResultados = document.getElementById('area-resultados');
 
-    function mostra(texto) {
-        document.write(texto);
-        quebraLinha();
-    }
+    
+    btnIniciar.addEventListener('click', function() {
+        
+        areaResultados.innerHTML = '';
+        btnIniciar.style.display = 'none';        
+       
+        function mostraResultado(label, valor, ehAviso = false) {
+            const linha = document.createElement('div');
+            linha.classList.add('resultado-linha');
+
+            if (ehAviso) {
+                linha.innerHTML = `<p class="aviso">${label}</p>`;
+            } else {
+                linha.innerHTML = `<strong>${label}:</strong> <span>${valor}</span>`;
+            }
+            
+            areaResultados.appendChild(linha);
+        }
+
+ //lógica
     
     var distancia_Percorrida = parseFloat(prompt("Qual a distância percorrida da sua casa até seu trabalho (em km)?"));
     
@@ -32,7 +125,7 @@
 
     var consumo_Necessario_Litros = distancia_Percorrida / consumo_Medio;
 
-    mostra("O consumo necessário é " + consumo_Necessario_Litros.toFixed(2) + " litros");
+    mostraResultado("O consumo necessário é ", consumo_Necessario_Litros.toFixed(2) + " litros");
 
     var quantidade_Postos_Pesquisados = parseInt(prompt("Em quantos postos você pesquisou?"));
 
@@ -59,20 +152,33 @@
     }
     
     if (contador_Postos_Validos > 0) {
-        var media = soma_total_Valores_Pesquisados / contador_Postos_Validos;
-        mostra("A média dos valores pesquisados é R$ " + media.toFixed(2));
-    } else {
-        mostra("Não foi possível calcular a média, pois nenhum valor válido foi digitado.");
+            var media = soma_total_Valores_Pesquisados / contador_Postos_Validos;
+            mostraResultado("A média dos valores pesquisados é", "R$ " + media.toFixed(2));
+        } else {
+            mostraResultado("Não foi possível calcular a média, pois nenhum valor válido foi digitado.", "", true);
+        }
+        
+        if (menor_Valor_Pesquisado === Infinity) {
+            mostraResultado("Não foi encontrado um menor valor, pois nenhum preço válido foi inserido.", "", true);
+            mostraResultado("Não é possível calcular o gasto diário.", "", true);
+        } else {
+            var gasto_Diario = 2 * (consumo_Necessario_Litros * menor_Valor_Pesquisado);
+            mostraResultado("O menor valor pesquisado é", "R$ " + menor_Valor_Pesquisado.toFixed(2));
+            mostraResultado("O gasto diário (ida e volta) é", "R$ " + gasto_Diario.toFixed(2));
+        }
+    });
+
+
+    function quebraLinha() {
+        document.write("<br>");
     }
-    
-    if (menor_Valor_Pesquisado === Infinity) {
-        mostra("Não foi encontrado um menor valor, pois nenhum preço válido foi inserido.");
-        mostra("Não é possível calcular o gasto diário.");
-    } else {
-        var gasto_Diario = 2 * (consumo_Necessario_Litros * menor_Valor_Pesquisado);
-        mostra("O menor valor pesquisado é R$ " + menor_Valor_Pesquisado.toFixed(2));
-        mostra("O gasto diário (ida e volta) é R$ " + gasto_Diario.toFixed(2));
+
+    function mostra(texto) {
+        document.write(texto);
+        quebraLinha();
     }
+
+
 
 </script>
 
